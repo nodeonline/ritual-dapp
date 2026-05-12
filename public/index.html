@@ -1,0 +1,266 @@
+<!-- public/index.html -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Ritual Deploy</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.1/dist/ethers.umd.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+</head>
+<body>
+
+  
+<div class="bg-glow"></div>
+
+<div id="particles-js"></div>
+
+<div class="container">
+
+  <header class="navbar">
+
+    <img
+      src="images/ritual_logo_full.svg"
+      class="logo"
+    />
+
+    <div class="nav-right">
+
+      <div
+        class="stats"
+        id="deployStats"
+      >
+
+        <div class="live-dot"></div>
+
+        <span id="deployCount">
+          0 Deploys
+        </span>
+
+      </div>
+
+      <a
+        href="https://skills.ritualfoundation.org/"
+        target="_blank"
+        class="nav-btn"
+      >
+        Skill
+      </a>
+
+      <a
+        href="https://faucet.ritualfoundation.org/"
+        target="_blank"
+        class="nav-btn"
+      >
+        Faucet
+      </a>
+
+      <button
+        class="nav-btn"
+        id="connectBtn"
+      >
+        Connect Wallet
+      </button>
+
+    </div>
+
+  </header>
+
+  <main class="hero">
+
+    <div class="deploy-box">
+
+      <div class="line"></div>
+
+      <div class="logo-wrapper">
+
+        <img
+          src="images/RITUAL.svg"
+          class="hero-logo"
+        />
+
+      </div>
+
+      <p class="subtitle">
+        Ritual Smart Contract Deployment
+      </p>
+
+      <button
+        id="deployBtn"
+        class="deploy-btn"
+      >
+        Deploy Contract
+      </button>
+
+      <div
+        class="status"
+        id="status"
+      ></div>
+
+      <div id="terminal" class="terminal"></div>
+
+      
+
+      <div
+        class="success-box"
+        id="successBox"
+      >
+
+        <div class="success-dot"></div>
+
+        <div class="poap-title">
+          Deploy Successful
+        </div>
+
+        <div class="logo-wrapper success-logo-wrap">
+
+          <img
+            src="images/LOGO_RITUAL.png"
+            class="hero-logo"
+          />
+
+        </div>
+
+        <button
+          class="deploy-btn"
+          id="mintBtn"
+        >
+          Mint POAP
+        </button>
+
+      </div>
+
+      <div class="line"></div>
+
+    </div>
+
+  </main>
+
+  <section class="history-section">
+
+    <h3>History</h3>
+
+    <div
+      class="history"
+      id="history"
+    >
+    
+
+      <div class="history-item">
+        > waiting deploy activity...
+      </div>
+
+    </div>
+
+  </section>
+
+  <footer class="footer">
+
+    <img
+      src="images/online.png"
+      class="online"
+    />
+
+    <div class="socials">
+
+      <a
+        href="https://x.com/ritualnet"
+        target="_blank"
+      >
+        X
+      </a>
+
+      <a
+        href="https://t.me/ritualchain"
+        target="_blank"
+      >
+        Telegram
+      </a>
+
+      <a
+        href="https://discord.gg/87wuA8fBb"
+        target="_blank"
+      >
+        Discord
+      </a>
+
+      <a
+        href="https://ritual.net/"
+        target="_blank"
+      >
+        Web
+      </a>
+
+      <a
+        href="https://docs.ritualfoundation.org/"
+        target="_blank"
+      >
+        Docs
+      </a>
+
+    </div>
+
+  </footer>
+
+</div>
+
+<script>
+particlesJS("particles-js", {
+  particles: {
+    number: {
+      value: 100
+    },
+
+    color: {
+      value: "#E7E7E7"
+    },
+
+    shape: {
+      type: "circle"
+    },
+
+    opacity: {
+      value: 0.08
+    },
+
+    size: {
+      value: 2
+    },
+
+    move: {
+      enable: true,
+      speed: 1.5
+    },
+
+line_linked: {
+  enable: true,
+  distance: 140,
+  color: "#ffffff",
+  opacity: 0.04,
+  width: 1
+}
+  }
+})
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html>

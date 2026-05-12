@@ -1,0 +1,17 @@
+{
+  "name": "ritual-dapp",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ethers": "^6.16.0",
+    "express": "^4.22.1",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^7.0.0",
+    "hardhat": "^2.28.6"
+  }
+}
