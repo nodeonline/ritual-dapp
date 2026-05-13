@@ -1,5 +1,6 @@
 // public/app.js
 
+
 const deployBtn =
   document.getElementById(
     "deployBtn"
@@ -123,7 +124,7 @@ async function connectWallet() {
       connected = false
 
       connectBtn.innerText =
-        "Connect"
+        "wallet Connect"
 
       statusBox.innerText =
         "wallet disconnected"
@@ -201,14 +202,20 @@ async function connectWallet() {
 
     connected = true
 
-    connectBtn.innerText =
-      "Disconnect"
+    const walletAddress =
+  await signer.getAddress()
+
+connectBtn.innerText =
+  `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`
 
     connectBtn.style.color =
-      "#7CFFB2"
+      "#9298A4"
 
     statusBox.innerText =
-      "wallet connected"
+      "wallet Connected"
+
+      connectBtn.style.color =
+  ""
 
   } catch (err) {
 
@@ -455,12 +462,22 @@ async function loadHistory() {
     ${item.status}
   </div>
 
-  <div class="history-row">
-    Contract:
-    <span>
-      ${item.contractAddress}
-    </span>
-  </div>
+ <div class="contract-row">
+
+  <span>
+    ${item.contractAddress}
+  </span>
+
+  <button
+    class="copy-btn"
+    onclick="copyContract('${item.contractAddress}', this)"
+  >
+    Copy
+  </button>
+
+</div>
+
+  
 
   <div class="history-row">
     Transaction:
@@ -513,3 +530,15 @@ loadHistory()
 
 
 
+function copyContract(address, btn) {
+
+  navigator.clipboard.writeText(address)
+
+  btn.innerText = "Copied ✓"
+
+  setTimeout(() => {
+
+    btn.innerText = "Copy"
+
+  }, 1500)
+}

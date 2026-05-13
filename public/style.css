@@ -706,3 +706,39 @@ body::after {
 }
 
 
+.contract-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 4px;
+
+  flex-wrap: wrap;
+}
+
+.copy-btn {
+
+  background: transparent;
+
+  border: 1px solid #2A2A2D;
+
+  color: #7A818C;
+
+  padding: 4px 10px;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  transition: .2s ease;
+}
+
+.copy-btn:hover {
+
+  color: #fff;
+
+  border-color: #444;
+}
