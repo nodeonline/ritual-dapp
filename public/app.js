@@ -292,7 +292,16 @@ const receipt =
 
 const txHash = tx.hash 
 
-const contractAddress = await contract.getAddress()
+const contractAddress = 
+ await contract.getAddress()
+
+console.log( 
+  "TX HASH:", txHash 
+) 
+
+console.log( 
+"CONTRACT:", contractAddress 
+)
 
 console.log(
   "SAVE ADDRESS:",
