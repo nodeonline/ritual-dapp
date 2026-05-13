@@ -1,25 +1,60 @@
-```js
-global.historyData =
-  global.historyData || []
+import { supabase }
+from '../lib/supabase.js'
 
-export default function handler(
+export default async function handler(
   req,
   res
 ) {
 
-  if (req.method === "POST") {
+  // SAVE
 
-    global.historyData.unshift(
-      req.body
-    )
+  if (req.method === 'POST') {
 
-    return res.status(200).json({
-      success: true
-    })
+    const {
+      txHash,
+      contractAddress,
+      wallet,
+      status
+    } = req.body
+
+    const { error } =
+      await supabase
+        .from('deploy_history')
+        .insert([
+          {
+            txhash: txHash,
+            contractaddress:
+              contractAddress,
+            wallet,
+            status
+          }
+        ])
+
+    if (error) {
+
+      return res.status(500)
+      .json(error)
+    }
+
+    return res.status(200)
+    .json({ success: true })
   }
 
-  return res.status(200).json(
-    global.historyData
-  )
+  // GET
+
+  const { data, error } =
+    await supabase
+      .from('deploy_history')
+      .select('*')
+      .order('id', {
+        ascending: false
+      })
+
+  if (error) {
+
+    return res.status(500)
+    .json(error)
+  }
+
+  res.status(200).json(data)
 }
-```
