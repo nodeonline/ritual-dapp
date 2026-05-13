@@ -284,16 +284,13 @@ terminalLog(
   "waiting block confirmation..."
 )
 
-const tx =
-  contract.deploymentTransaction()
-
-const receipt =
-  await tx.wait()
-
-const txHash = tx.hash 
+await contract.waitForDeployment()
 
 const contractAddress = 
- await contract.getAddress()
+ await contract.getAddress() 
+ 
+ const txHash = 
+   contract.deploymentTransaction().hash
 
 console.log( 
   "TX HASH:", txHash 
