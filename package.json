@@ -2,6 +2,7 @@
   "name": "ritual-dapp",
   "version": "1.0.0",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
@@ -17,7 +18,5 @@
     "@nomicfoundation/hardhat-toolbox": "^7.0.0",
     "hardhat": "^2.28.6"
   }
-
-  { "type": "module" }
   
 }
