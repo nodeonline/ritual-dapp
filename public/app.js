@@ -277,8 +277,8 @@ async function deployContract() {
       "broadcasting transaction..."
     )
 
-    const contract =
-  await factory.deploy()
+const contract =
+ await factory.deploy()
 
 terminalLog(
   "waiting block confirmation..."
@@ -288,7 +288,7 @@ await contract.waitForDeployment()
 
 const contractAddress = 
  await contract.getAddress() 
- 
+
  const txHash = 
    contract.deploymentTransaction().hash
 
@@ -477,12 +477,12 @@ async function loadHistory() {
  <div class="contract-row">
 
   <span>
-    ${item.contractAddress}
+    ${item.contractaddress}
   </span>
 
   <button
     class="copy-btn"
-    onclick="copyContract('${item.contractAddress}', this)"
+    onclick="copyContract('${item.contractaddress}', this)"
   >
     Copy
   </button>
@@ -495,10 +495,10 @@ async function loadHistory() {
     Transaction:
     <a
       class="history-link"
-      href="https://explorer.ritualfoundation.org/tx/${item.txHash}"
+      href="https://explorer.ritualfoundation.org/tx/${item.txhash}"
       target="_blank"
     >
-      ${item.txHash}
+      ${item.txhash}
     </a>
   </div>
 
