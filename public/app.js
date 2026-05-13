@@ -290,11 +290,9 @@ const tx =
 const receipt =
   await tx.wait()
 
-const txHash =
-  receipt.hash
+const txHash = tx.hash 
 
-const contractAddress =
-  contract.target
+const contractAddress = await contract.getAddress()
 
 console.log(
   "SAVE ADDRESS:",
@@ -311,30 +309,38 @@ const wallet =
   contractAddress
 )
 
-    await fetch("/api/history", {
+const response =
+  await fetch("/api/history", {
 
-      method: "POST",
+    method: "POST",
 
-      headers: {
-        "Content-Type":
-          "application/json"
-      },
+    headers: {
+      "Content-Type":
+        "application/json"
+    },
 
-      
+    body: JSON.stringify({
 
-      body: JSON.stringify({
+      txHash,
 
-        txHash,
+      contractAddress,
 
-        contractAddress,
+      wallet,
 
-        wallet,
-
-        status: "Success"
-
-      })
+      status: "Success"
 
     })
+
+  })
+
+const result =
+  await response.json()
+
+console.log(
+  "HISTORY RESPONSE:",
+  result
+)
+
 
     terminalLog(
       "contract deployed successfully"
