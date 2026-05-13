@@ -1,6 +1,6 @@
 ```js
-import historyHandler
-from "./history.js"
+global.historyData =
+  global.historyData || []
 
 export default function handler(
   req,
@@ -8,7 +8,8 @@ export default function handler(
 ) {
 
   res.status(200).json({
-    total: 0
+    total:
+      global.historyData.length
   })
 }
 ```

@@ -1,5 +1,6 @@
 ```js
-let history = []
+global.historyData =
+  global.historyData || []
 
 export default function handler(
   req,
@@ -8,7 +9,9 @@ export default function handler(
 
   if (req.method === "POST") {
 
-    history.unshift(req.body)
+    global.historyData.unshift(
+      req.body
+    )
 
     return res.status(200).json({
       success: true
@@ -16,7 +19,7 @@ export default function handler(
   }
 
   return res.status(200).json(
-    history
+    global.historyData
   )
 }
 ```
