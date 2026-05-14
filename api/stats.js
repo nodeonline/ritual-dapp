@@ -1,5 +1,13 @@
-import { supabase }
-from '../lib/supabase.js'
+import { createClient }
+from "@supabase/supabase-js"
+
+const supabase =
+  createClient(
+
+    process.env.SUPABASE_URL,
+
+    process.env.SUPABASE_KEY
+  )
 
 export default async function handler(
   req,
@@ -10,19 +18,26 @@ export default async function handler(
     count,
     error
   } = await supabase
-    .from('deploy_history')
-    .select('*', {
-      count: 'exact',
+
+    .from("deploy_history")
+
+    .select("*", {
+      count: "exact",
       head: true
     })
 
   if (error) {
 
-    return res.status(500)
-    .json(error)
+    return res
+      .status(500)
+      .json({
+        error: error.message
+      })
   }
 
-  res.status(200).json({
-    total: count
-  })
+  return res
+    .status(200)
+    .json({
+      total: count || 0
+    })
 }
