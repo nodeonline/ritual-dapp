@@ -63,11 +63,18 @@ export default async function handler(req, res) {
         : req.body
 
     const { error } =
-      await supabase
+  await supabase
 
-        .from("deploy_history")
+    .from("deploy_history")
 
-        .insert([body])
+    .insert([{
+
+      ...body,
+
+      wallet:
+        body.wallet.toLowerCase()
+
+    }])
 
     if (error) {
 

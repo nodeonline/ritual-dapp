@@ -309,7 +309,9 @@ console.log(
 )
 
 const wallet =
-  await signer.getAddress()
+  (
+    await signer.getAddress()
+  ).toLowerCase()
 
     // save history
 
