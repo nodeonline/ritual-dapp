@@ -126,6 +126,8 @@ async function connectWallet() {
       connectBtn.innerText =
         "wallet Connect"
 
+      loadHistory()
+
       statusBox.innerText =
         "wallet disconnected"
 
@@ -437,7 +439,7 @@ async function loadStats() {
     const data =
       await res.json()
   
-      console.log(data)
+      console.log("DATA:", data)
 
     if (deployCount) {
 
@@ -472,7 +474,7 @@ async function loadHistory() {
     const data =
       await res.json()
 
-      console.log(data)
+      console.log("DATA:", data)
 
     if (!historyBox) return
 
@@ -495,12 +497,12 @@ async function loadHistory() {
 <div class="history-row">
   Contract:
   <span>
-    ${item.contract_address}
+    ${item.contractAddress}
   </span>
 
   <button
     class="copy-btn"
-    onclick="copyContract('${item.contract_address}', this)"
+    onclick="copyContract('${item.contractAddress}', this)"
   >
     Copy
   </button>
@@ -511,10 +513,10 @@ async function loadHistory() {
   Transaction:
   <a
     class="history-link"
-    href="https://explorer.ritualfoundation.org/tx/${item.tx_hash}"
+    href="https://explorer.ritualfoundation.org/tx/${item.txHash}"
     target="_blank"
   >
-    ${item.tx_hash}
+    ${item.txHash}
   </a>
 </div>
 
