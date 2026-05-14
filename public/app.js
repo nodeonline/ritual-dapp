@@ -289,8 +289,11 @@ await contract.waitForDeployment()
 const contractAddress = 
  await contract.getAddress() 
 
- const txHash = 
-   contract.deploymentTransaction().hash
+ const deployTx =
+  contract.deploymentTransaction()
+
+const txHash =
+  deployTx?.hash || "Failed"
 
 console.log( 
   "TX HASH:", txHash 
@@ -463,6 +466,8 @@ async function loadHistory() {
     const data =
       await res.json()
 
+      console.log(data)
+
     if (!historyBox) return
 
     historyBox.innerHTML = ""
@@ -481,22 +486,22 @@ async function loadHistory() {
   ${item.status}
 </div>
 
-<div class="contract-row">
-
+<div class="history-row">
+  Contract:
   <span>
-    ${item.contrActaddress}
+    ${item.contractAddress}
   </span>
 
   <button
     class="copy-btn"
-    onclick="copyContract('${item.contrActaddress}', this)"
+    onclick="copyContract('${item.contractAddress}', this)"
   >
     Copy
   </button>
-
 </div>
 
 <div class="history-row">
+
   Transaction:
   <a
     class="history-link"
