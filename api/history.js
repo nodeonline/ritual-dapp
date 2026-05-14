@@ -1,60 +1,81 @@
-import { supabase }
-from '../lib/supabase.js'
+import { createClient }
+from "@supabase/supabase-js"
 
-export default async function handler(
-  req,
-  res
-) {
+const supabase =
+  createClient(
 
-  // SAVE
+    process.env.SUPABASE_URL,
 
-  if (req.method === 'POST') {
+    process.env.SUPABASE_KEY
+  )
 
-    const {
-      txHash,
-      contractAddress,
-      wallet,
-      status
-    } = req.body
+export default async function handler(req, res) {
 
-    const { error } =
+  // ======================
+  // GET HISTORY
+  // ======================
+
+  if (req.method === "GET") {
+
+    const { wallet } =
+      req.query
+
+    const { data, error } =
       await supabase
-        .from('deploy_history')
-        .insert([
-          {
-            txhash: txHash,
-            contractaddress:
-              contractAddress,
-            wallet,
-            status
-          }
-        ])
+
+        .from("deploy_history")
+
+        .select("*")
+
+        .eq(
+          "wallet",
+          wallet
+        )
+
+        .order(
+          "created_at",
+          { ascending: false }
+        )
 
     if (error) {
 
-      return res.status(500)
-      .json(error)
+      return res
+        .status(500)
+        .json({
+          error: error.message
+        })
     }
 
-    return res.status(200)
-    .json({ success: true })
+    return res.json(data)
   }
 
-  // GET
+  // ======================
+  // SAVE HISTORY
+  // ======================
 
-  const { data, error } =
-    await supabase
-      .from('deploy_history')
-      .select('*')
-      .order('id', {
-        ascending: false
-      })
+  if (req.method === "POST") {
 
-  if (error) {
+    const body =
+      req.body
 
-    return res.status(500)
-    .json(error)
+    const { error } =
+      await supabase
+
+        .from("deploy_history")
+
+        .insert([body])
+
+    if (error) {
+
+      return res
+        .status(500)
+        .json({
+          error: error.message
+        })
+    }
+
+    return res.json({
+      success: true
+    })
   }
-
-  res.status(200).json(data)
 }

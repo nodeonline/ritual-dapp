@@ -450,8 +450,15 @@ async function loadHistory() {
 
   try {
 
+    if (!signer) return
+
+    const wallet =
+      await signer.getAddress()
+
     const res =
-      await fetch("/api/history")
+      await fetch(
+        `/api/history?wallet=${wallet}`
+      )
 
     const data =
       await res.json()
@@ -470,46 +477,46 @@ async function loadHistory() {
 
       div.innerHTML = `
 
-  <div class="history-status">
-    ${item.status}
-  </div>
+<div class="history-status">
+  ${item.status}
+</div>
 
- <div class="contract-row">
+<div class="contract-row">
 
   <span>
-    ${item.contractaddress}
+    ${item.contrActaddress}
   </span>
 
   <button
     class="copy-btn"
-    onclick="copyContract('${item.contractaddress}', this)"
+    onclick="copyContract('${item.contrActaddress}', this)"
   >
     Copy
   </button>
 
 </div>
 
-  
-
-  <div class="history-row">
-    Transaction:
-    <a
-      class="history-link"
-      href="https://explorer.ritualfoundation.org/tx/${item.txhash}"
-      target="_blank"
-    >
-      ${item.txhash}
-    </a>
-  </div>
+<div class="history-row">
+  Transaction:
+  <a
+    class="history-link"
+    href="https://explorer.ritualfoundation.org/tx/${item.txHash}"
+    target="_blank"
+  >
+    ${item.txHash}
+  </a>
+</div>
 
 `
 
       historyBox.appendChild(div)
+
     })
 
   } catch (err) {
 
     console.log(err)
+
   }
 }
 
