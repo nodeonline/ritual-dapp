@@ -69,12 +69,19 @@ export default async function handler(req, res) {
 
     .insert([{
 
-      ...body,
+  txhash:
+    body.txHash,
 
-      wallet:
-        body.wallet.toLowerCase()
+  contractaddress:
+    body.contractAddress,
 
-    }])
+  wallet:
+    body.wallet.toLowerCase(),
+
+  status:
+    body.status
+
+}])
 
     if (error) {
 
