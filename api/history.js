@@ -1,113 +1,89 @@
-const { createClient } =
-  require("@supabase/supabase-js")
+import { createClient } from "@supabase/supabase-js"
 
-const supabase =
-  createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY
-  )
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+)
 
-module.exports =
-  async function handler(req, res) {
+export default async function handler(
+  req,
+  res
+) {
 
+  try {
+
+    // ======================
     // GET
+    // ======================
 
     if (req.method === "GET") {
 
-      const { wallet } =
-        req.query
+      const wallet =
+        req.query.wallet?.toLowerCase()
 
       const { data, error } =
         await supabase
-
           .from("deploy_history")
-
           .select("*")
-
-          .eq(
-            "wallet",
-            wallet.toLowerCase()
-          )
-
+          .eq("wallet", wallet)
           .order(
             "created_at",
             { ascending: false }
           )
 
       if (error) {
-
-        return res
-          .status(500)
-          .json({
-            error: error.message
-          })
+        throw error
       }
 
-      return res
-        .status(200)
-        .json(data)
+      return res.status(200).json(data)
     }
 
+    // ======================
     // POST
+    // ======================
 
     if (req.method === "POST") {
 
-      try {
+      const body = req.body
 
-        const body =
-          typeof req.body === "string"
-            ? JSON.parse(req.body)
-            : req.body
+      const { error } =
+        await supabase
+          .from("deploy_history")
+          .insert([{
 
-        const { error } =
-          await supabase
+            txHash:
+              body.txHash,
 
-            .from("deploy_history")
+            contractAddress:
+              body.contractAddress,
 
-            .insert([{
+            wallet:
+              body.wallet.toLowerCase(),
 
-              txHash:
-                body.txHash,
+            status:
+              body.status
 
-              contractAddress:
-                body.contractAddress,
+          }])
 
-              wallet:
-                body.wallet.toLowerCase(),
-
-              status:
-                body.status
-
-            }])
-
-        if (error) {
-
-          return res
-            .status(500)
-            .json({
-              error: error.message
-            })
-        }
-
-        return res
-          .status(200)
-          .json({
-            success: true
-          })
-
-      } catch (err) {
-
-        return res
-          .status(500)
-          .json({
-            error: err.message
-          })
+      if (error) {
+        throw error
       }
+
+      return res.status(200).json({
+        success: true
+      })
     }
 
-    return res
-      .status(405)
-      .json({
-        error: "Method not allowed"
-      })
+    return res.status(405).json({
+      error: "Method not allowed"
+    })
+
+  } catch (err) {
+
+    console.log(err)
+
+    return res.status(500).json({
+      error: err.message
+    })
   }
+}
