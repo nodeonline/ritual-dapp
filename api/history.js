@@ -1,18 +1,18 @@
-import { createClient }
-from "@supabase/supabase-js"
+import { createClient } from "@supabase/supabase-js"
 
 const supabase =
   createClient(
-
     process.env.SUPABASE_URL,
-
     process.env.SUPABASE_KEY
   )
 
-export default async function handler(req, res) {
+export default async function handler(
+  req,
+  res
+) {
 
   // ======================
-  // GET HISTORY
+  // GET
   // ======================
 
   if (req.method === "GET") {
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 
         .eq(
           "wallet",
-          wallet
+          wallet.toLowerCase()
         )
 
         .order(
@@ -46,64 +46,73 @@ export default async function handler(req, res) {
         })
     }
 
-    return res.json(data)
+    return res
+      .status(200)
+      .json(data)
   }
 
   // ======================
-  // SAVE HISTORY
+  // POST
   // ======================
 
   if (req.method === "POST") {
 
-  try {
+    try {
 
-    const body =
-      typeof req.body === "string"
-        ? JSON.parse(req.body)
-        : req.body
+      const body =
+        typeof req.body === "string"
+          ? JSON.parse(req.body)
+          : req.body
 
-    const { error } =
-  await supabase
+      const { error } =
+        await supabase
 
-    .from("deploy_history")
+          .from("deploy_history")
 
-    .insert([{
+          .insert([{
 
-  txhash:
-    body.txHash,
+            txHash:
+              body.txHash,
 
-  contractaddress:
-    body.contractAddress,
+            contractAddress:
+              body.contractAddress,
 
-  wallet:
-    body.wallet.toLowerCase(),
+            wallet:
+              body.wallet.toLowerCase(),
 
-  status:
-    body.status
+            status:
+              body.status
 
-}])
+          }])
 
-    if (error) {
+      if (error) {
+
+        return res
+          .status(500)
+          .json({
+            error: error.message
+          })
+      }
+
+      return res
+        .status(200)
+        .json({
+          success: true
+        })
+
+    } catch (err) {
 
       return res
         .status(500)
         .json({
-          error: error.message
+          error: err.message
         })
     }
-
-    return res.json({
-      success: true
-    })
-
-  } catch (err) {
-
-    return res
-      .status(500)
-      .json({
-        error: err.message
-      })
   }
-}
 
+  return res
+    .status(405)
+    .json({
+      error: "Method not allowed"
+    })
 }
