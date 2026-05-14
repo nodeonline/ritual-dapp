@@ -343,7 +343,9 @@ const response =
   })
 
 const result =
-  await response.json()
+  await response.text()
+
+console.log(result)
 
 console.log(
   "HISTORY RESPONSE:",

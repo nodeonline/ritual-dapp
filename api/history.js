@@ -55,8 +55,12 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
 
+  try {
+
     const body =
-      req.body
+      typeof req.body === "string"
+        ? JSON.parse(req.body)
+        : req.body
 
     const { error } =
       await supabase
@@ -77,5 +81,14 @@ export default async function handler(req, res) {
     return res.json({
       success: true
     })
+
+  } catch (err) {
+
+    return res
+      .status(500)
+      .json({
+        error: err.message
+      })
   }
+}
 }
