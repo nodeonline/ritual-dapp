@@ -1,43 +1,43 @@
-import { createClient }
-from "@supabase/supabase-js"
+import { createClient } from "@supabase/supabase-js"
 
-const supabase =
-  createClient(
-
-    process.env.SUPABASE_URL,
-
-    process.env.SUPABASE_KEY
-  )
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+)
 
 export default async function handler(
   req,
   res
 ) {
 
-  const {
-    count,
-    error
-  } = await supabase
+  try {
 
-    .from("deploy_history")
+    const {
+      count,
+      error
+    } = await supabase
 
-    .select("*", {
-      count: "exact",
-      head: true
-    })
+      .from("deploy_history")
 
-  if (error) {
-
-    return res
-      .status(500)
-      .json({
-        error: error.message
+      .select("*", {
+        count: "exact",
+        head: true
       })
-  }
 
-  return res
-    .status(200)
-    .json({
+    if (error) {
+      throw error
+    }
+
+    return res.status(200).json({
       total: count || 0
     })
+
+  } catch (err) {
+
+    console.log(err)
+
+    return res.status(500).json({
+      error: err.message
+    })
+  }
 }
