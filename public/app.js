@@ -334,15 +334,15 @@ const response =
 
     body: JSON.stringify({
 
-      txHash,
+  tx_hash: txHash,
 
-      contractAddress,
+  contract_address: contractAddress,
 
-      wallet,
+  wallet,
 
-      status: "Success"
+  status: "Success"
 
-    })
+})
 
   })
 
@@ -405,19 +405,19 @@ console.log(
 
       body: JSON.stringify({
 
-        txHash:
-          err?.transactionHash ||
-          "Failed",
+  tx_hash:
+    err?.transactionHash ||
+    "Failed",
 
-        contractAddress:
-          "-",
+  contract_address:
+    "-",
 
-        wallet:
-          "-",
+  wallet:
+    "-",
 
-        status: "Failed"
+  status: "Failed"
 
-      })
+})
 
     })
 
