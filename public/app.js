@@ -580,3 +580,47 @@ function copyContract(address, btn) {
 
   }, 1500)
 }
+
+const supabaseClient =
+  supabase.createClient(
+
+    "https://gmuvjzzcxclbfmcvaymi.supabase.co",
+
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtdXZqenpjeGNsYmZtY3ZheW1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2Nzg3NTgsImV4cCI6MjA5NDI1NDc1OH0.AKU8zDKKZul-2msCz11rmCKJQN8C5P1697QCZg5utUY"
+  )
+
+supabaseClient
+
+  .channel("deploy-realtime")
+
+  .on(
+
+    "postgres_changes",
+
+    {
+
+      event: "INSERT",
+
+      schema: "public",
+
+      table: "deploy_history"
+
+    },
+
+    payload => {
+
+      console.log(
+        "REALTIME:",
+        payload
+      )
+
+      loadStats()
+      loadHistory()
+
+      terminalLog(
+        "new deploy detected"
+      )
+    }
+  )
+
+  .subscribe()
