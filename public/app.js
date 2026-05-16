@@ -83,7 +83,7 @@ const ritualChain = {
   chainName: "Ritual",
 
   nativeCurrency: {
-    name: "RIT",
+    name: "RITUAL",
     symbol: "RIT",
     decimals: 18
   },
