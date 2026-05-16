@@ -6,6 +6,7 @@ const supabase =
     process.env.SUPABASE_URL,
     process.env.SUPABASE_ANON_KEY
   )
+
 export default async function handler(
   req,
   res
@@ -34,8 +35,6 @@ export default async function handler(
     })
 
   } catch (err) {
-
-    console.log(err)
 
     return res.status(500).json({
       error: err.message

@@ -204,11 +204,13 @@ async function connectWallet() {
 
     connected = true
 
-    const walletAddress =
+    const wallet =
+(
   await signer.getAddress()
+).toLowerCase()
 
 connectBtn.innerText =
-  `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`
+  `${wallet.slice(0,6)}...${wallet.slice(-4)}`
 
     connectBtn.style.color =
       "#9298A4"
@@ -464,7 +466,9 @@ async function loadHistory() {
     if (!signer) return
 
     const wallet =
-      await signer.getAddress()
+  (
+    await signer.getAddress()
+  ).toLowerCase()
 
     const res =
       await fetch(
@@ -497,12 +501,12 @@ async function loadHistory() {
 <div class="history-row">
   Contract:
   <span>
-    ${item.contractAddress}
+    ${item.contract_address}
   </span>
 
   <button
     class="copy-btn"
-    onclick="copyContract('${item.contractAddress}', this)"
+    onclick="copyContract('${item.contract_address}', this)"
   >
     Copy
   </button>
@@ -513,10 +517,10 @@ async function loadHistory() {
   Transaction:
   <a
     class="history-link"
-    href="https://explorer.ritualfoundation.org/tx/${item.txHash}"
+    href="https://explorer.ritualfoundation.org/tx/${item.tx_hash}"
     target="_blank"
   >
-    ${item.txHash}
+    ${item.tx_hash}
   </a>
 </div>
 

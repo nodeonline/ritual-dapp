@@ -7,7 +7,10 @@ const supabase =
     process.env.SUPABASE_ANON_KEY
   )
 
-export default async function handler(req, res) {
+export default async function handler(
+  req,
+  res
+) {
 
   // ======================
   // GET HISTORY
@@ -15,31 +18,37 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
 
-    const wallet =
-      req.query.wallet?.toLowerCase()
+    try {
 
-    const { data, error } =
-      await supabase
+      const wallet =
+        req.query.wallet?.toLowerCase()
 
-        .from("deploy_history")
+      const { data, error } =
+        await supabase
 
-        .select("*")
+          .from("deploy_history")
 
-        .eq("wallet", wallet)
+          .select("*")
 
-        .order(
-          "created_at",
-          { ascending: false }
-        )
+          .eq("wallet", wallet)
 
-    if (error) {
+          .order(
+            "created_at",
+            { ascending: false }
+          )
+
+      if (error) {
+        throw error
+      }
+
+      return res.status(200).json(data)
+
+    } catch (err) {
 
       return res.status(500).json({
-        error: error.message
+        error: err.message
       })
     }
-
-    return res.status(200).json(data)
   }
 
   // ======================
@@ -57,11 +66,11 @@ export default async function handler(req, res) {
 
       const insertData = {
 
-        txHash:
-          body.txHash,
+        tx_hash:
+          body.tx_hash,
 
-        contractAddress:
-          body.contractAddress,
+        contract_address:
+          body.contract_address,
 
         wallet:
           body.wallet.toLowerCase(),
@@ -85,10 +94,7 @@ export default async function handler(req, res) {
           .select()
 
       if (error) {
-
-        return res.status(500).json({
-          error: error.message
-        })
+        throw error
       }
 
       return res.status(200).json({
@@ -103,4 +109,8 @@ export default async function handler(req, res) {
       })
     }
   }
+
+  return res.status(405).json({
+    error: "Method not allowed"
+  })
 }
