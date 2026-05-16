@@ -644,7 +644,7 @@ supabaseClient
       else {
 
         terminalLog(
-          "verification contract is coming"
+          "contract verification coming soon"
         )
       }
     }
