@@ -18,38 +18,34 @@ export default async function handler(
 
   if (req.method === "GET") {
 
-    try {
+  const wallet =
+    req.query.wallet?.toLowerCase()
 
-      const wallet =
-        req.query.wallet?.toLowerCase()
+  const { data, error } =
+    await supabase
 
-      const { data, error } =
-        await supabase
+      .from("deploy_history")
 
-          .from("deploy_history")
+      .select("*")
 
-          .select("*")
+      .eq("wallet", wallet)
 
-          .eq("wallet", wallet)
+      .order(
+        "created_at",
+        { ascending: false }
+      )
 
-          .order(
-            "created_at",
-            { ascending: false }
-          )
+  if (error) {
 
-      if (error) {
-        throw error
-      }
-
-      return res.status(200).json(data)
-
-    } catch (err) {
-
-      return res.status(500).json({
-        error: err.message
-      })
-    }
+    return res.status(500).json({
+      error: error.message
+    })
   }
+
+  return res.status(200).json(
+    data || []
+  )
+}
 
   // ======================
   // SAVE HISTORY
@@ -66,18 +62,18 @@ export default async function handler(
 
       const insertData = {
 
-        tx_hash:
-          body.tx_hash,
+  txHash:
+    body.txHash,
 
-        contract_address:
-          body.contract_address,
+  contractAddress:
+    body.contractAddress,
 
-        wallet:
-          body.wallet.toLowerCase(),
+  wallet:
+    body.wallet.toLowerCase(),
 
-        status:
-          body.status
-      }
+  status:
+    body.status
+}
 
       console.log(
         "INSERT:",
