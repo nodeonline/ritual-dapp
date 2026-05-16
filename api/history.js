@@ -7,85 +7,100 @@ const supabase =
     process.env.SUPABASE_ANON_KEY
   )
 
-export default async function handler(
-  req,
-  res
-) {
+export default async function handler(req, res) {
 
-  try {
+  // ======================
+  // GET HISTORY
+  // ======================
 
-    // ======================
-    // GET
-    // ======================
+  if (req.method === "GET") {
 
-    if (req.method === "GET") {
+    const wallet =
+      req.query.wallet?.toLowerCase()
 
-      const wallet =
-        req.query.wallet?.toLowerCase()
+    const { data, error } =
+      await supabase
 
-      const { data, error } =
-        await supabase
-          .from("deploy_history")
-          .select("*")
-          .eq("wallet", wallet)
-          .order(
-            "created_at",
-            { ascending: false }
-          )
+        .from("deploy_history")
 
-      if (error) {
-        throw error
-      }
+        .select("*")
 
-      return res.status(200).json(data)
-    }
+        .eq("wallet", wallet)
 
-    // ======================
-    // POST
-    // ======================
+        .order(
+          "created_at",
+          { ascending: false }
+        )
 
-    if (req.method === "POST") {
+    if (error) {
 
-      const body = req.body
-
-      const { error } =
-        await supabase
-          .from("deploy_history")
-          .insert([{
-
-            txHash:
-              body.txHash,
-
-            contractAddress:
-              body.contractAddress,
-
-            wallet:
-              body.wallet.toLowerCase(),
-
-            status:
-              body.status
-
-          }])
-
-      if (error) {
-        throw error
-      }
-
-      return res.status(200).json({
-        success: true
+      return res.status(500).json({
+        error: error.message
       })
     }
 
-    return res.status(405).json({
-      error: "Method not allowed"
-    })
+    return res.status(200).json(data)
+  }
 
-  } catch (err) {
+  // ======================
+  // SAVE HISTORY
+  // ======================
 
-    console.log(err)
+  if (req.method === "POST") {
 
-    return res.status(500).json({
-      error: err.message
-    })
+    try {
+
+      const body =
+        typeof req.body === "string"
+          ? JSON.parse(req.body)
+          : req.body
+
+      const insertData = {
+
+        txHash:
+          body.txHash,
+
+        contractAddress:
+          body.contractAddress,
+
+        wallet:
+          body.wallet.toLowerCase(),
+
+        status:
+          body.status
+      }
+
+      console.log(
+        "INSERT:",
+        insertData
+      )
+
+      const { data, error } =
+        await supabase
+
+          .from("deploy_history")
+
+          .insert([insertData])
+
+          .select()
+
+      if (error) {
+
+        return res.status(500).json({
+          error: error.message
+        })
+      }
+
+      return res.status(200).json({
+        success: true,
+        data
+      })
+
+    } catch (err) {
+
+      return res.status(500).json({
+        error: err.message
+      })
+    }
   }
 }
