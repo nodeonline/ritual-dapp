@@ -607,7 +607,7 @@ supabaseClient
 
     },
 
-    payload => {
+    async (payload) => {
 
       console.log(
         "REALTIME:",
@@ -617,9 +617,36 @@ supabaseClient
       loadStats()
       loadHistory()
 
-      terminalLog(
-        "new deploy detected"
-      )
+      const deployWallet =
+        payload.new.wallet?.toLowerCase()
+
+      let currentWallet = null
+
+      if (signer) {
+
+        currentWallet =
+          (
+            await signer.getAddress()
+          ).toLowerCase()
+      }
+
+      // user lain
+      if (
+        currentWallet !== deployWallet
+      ) {
+
+        terminalLog(
+          "new deploy detected"
+        )
+      }
+
+      // yg deploy sendiri
+      else {
+
+        terminalLog(
+          "verification contract now"
+        )
+      }
     }
   )
 
