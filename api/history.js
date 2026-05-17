@@ -1,8 +1,6 @@
 import { createClient }
 from "@supabase/supabase-js"
 
-import solc from "solc"
-
 const supabase =
   createClient(
     process.env.SUPABASE_URL,
@@ -14,10 +12,14 @@ export default async function handler(
   res
 ) {
 
-  try {
+  // ======================
+  // GET HISTORY
+  // ======================
 
-    const { contractAddress } =
-      req.body
+  if (req.method === "GET") {
+
+    const wallet =
+      req.query.wallet?.toLowerCase()
 
     const { data, error } =
       await supabase
@@ -26,117 +28,98 @@ export default async function handler(
 
         .select("*")
 
-        .eq(
-          "contractAddress",
-          contractAddress
+        .eq("wallet", wallet)
+
+        .order(
+          "created_at",
+          { ascending: false }
         )
 
-        .single()
+    if (error) {
 
-    if (error || !data) {
-
-      return res.status(404).json({
-        error:
-          "contract not found"
+      return res.status(500).json({
+        error: error.message
       })
     }
 
-    const input = {
-
-      language: "Solidity",
-
-      sources: {
-
-        "Contract.sol": {
-
-          content:
-            data.source_code
-        }
-      },
-
-      settings: {
-
-        outputSelection: {
-
-          "*": {
-
-            "*": [
-              "evm.bytecode"
-            ]
-          }
-        }
-      }
-    }
-
-    const output =
-      JSON.parse(
-        solc.compile(
-          JSON.stringify(input)
-        )
-      )
-
-    const contractName =
-      Object.keys(
-        output.contracts[
-          "Contract.sol"
-        ]
-      )[0]
-
-    const compiledBytecode =
-      "0x" +
-
-      output.contracts[
-        "Contract.sol"
-      ][contractName]
-
-      .evm.bytecode.object
-
-    console.log(
-      "COMPILED:",
-      compiledBytecode
+    return res.status(200).json(
+      data || []
     )
-
-    console.log(
-      "DATABASE:",
-      data.bytecode
-    )
-
-    const verified =
-      compiledBytecode ===
-      data.bytecode
-
-    console.log(
-      "VERIFIED:",
-      verified
-    )
-
-    await supabase
-
-      .from("deploy_history")
-
-      .update({
-        verified
-      })
-
-      .eq(
-        "contractAddress",
-        contractAddress
-      )
-
-    return res.status(200).json({
-
-      success: true,
-
-      verified
-    })
-
-  } catch (err) {
-
-    console.log(err)
-
-    return res.status(500).json({
-
-      error: err.message
-    })
   }
+
+  // ======================
+  // SAVE HISTORY
+  // ======================
+
+  if (req.method === "POST") {
+
+    try {
+
+      const body =
+        typeof req.body === "string"
+          ? JSON.parse(req.body)
+          : req.body
+
+      const insertData = {
+
+        txHash:
+          body.txHash,
+
+        contractAddress:
+          body.contractAddress,
+
+        wallet:
+          body.wallet.toLowerCase(),
+
+        status:
+          body.status,
+
+        source_code:
+          body.source_code,
+
+        compiler_version:
+          body.compiler_version,
+
+        abi:
+          body.abi,
+
+        bytecode:
+          body.bytecode,
+
+        verified:
+          body.verified
+      }
+
+      const { data, error } =
+        await supabase
+
+          .from("deploy_history")
+
+          .insert([insertData])
+
+          .select()
+
+      if (error) {
+        throw error
+      }
+
+      return res.status(200).json({
+
+        success: true,
+
+        data
+      })
+
+    } catch (err) {
+
+      return res.status(500).json({
+
+        error: err.message
+      })
+    }
+  }
+
+  return res.status(405).json({
+    error: "Method not allowed"
+  })
 }
