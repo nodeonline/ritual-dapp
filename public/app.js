@@ -257,6 +257,27 @@ async function deployContract() {
 
     // ABI
 
+    const source_code = `
+
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.20;
+
+contract RitualContract {
+
+    address public owner;
+
+    uint public createdAt;
+
+    constructor() {
+
+        owner = msg.sender;
+
+        createdAt = block.timestamp;
+    }
+}
+`
+
     const abi = [
       {
         "inputs": [],
@@ -342,8 +363,17 @@ const response =
 
   wallet,
 
-  status: "Success"
+  status: "Success",
 
+  source_code: source_code,
+
+  compiler_version: "0.8.20",
+
+  abi: JSON.stringify(abi),
+
+  bytecode: bytecode,
+
+  verified: false
 })
 
   })
@@ -357,6 +387,22 @@ console.log(
   "HISTORY RESPONSE:",
   result
 )
+
+    await fetch("/api/verify", {
+
+      method: "POST",
+
+      headers: {
+
+        "Content-Type":
+          "application/json"
+      },
+
+      body: JSON.stringify({
+
+        contractAddress
+      })
+    })
 
 
     terminalLog(
@@ -407,19 +453,19 @@ console.log(
 
       body: JSON.stringify({
 
-  tx_hash:
-    err?.transactionHash ||
-    "Failed",
+      txHash:
+        err?.transactionHash ||
+        "Failed",
 
-  contract_address:
-    "-",
+      contractAddress:
+        "-",
 
-  wallet:
-    "-",
+      wallet:
+        "-",
 
-  status: "Failed"
+      status: "Failed"
 
-})
+    })
 
     })
 

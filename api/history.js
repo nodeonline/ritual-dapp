@@ -1,6 +1,7 @@
 import { createClient }
 from "@supabase/supabase-js"
 
+
 const supabase =
   createClient(
     process.env.SUPABASE_URL,
@@ -62,18 +63,33 @@ export default async function handler(
 
       const insertData = {
 
-  txHash:
-    body.txHash,
+      txHash:
+        body.txHash,
 
-  contractAddress:
-    body.contractAddress,
+      contractAddress:
+        body.contractAddress,
 
-  wallet:
-    body.wallet.toLowerCase(),
+      wallet:
+        body.wallet.toLowerCase(),
 
-  status:
-    body.status
-}
+      status:
+        body.status,
+
+      source_code:
+        body.source_code,
+
+      abi:
+        body.abi,
+
+      bytecode:
+        body.bytecode,
+
+      compiler_version:
+        body.compiler_version,
+
+      verified:
+        body.verified
+    }
 
       console.log(
         "INSERT:",
@@ -110,3 +126,4 @@ export default async function handler(
     error: "Method not allowed"
   })
 }
+
